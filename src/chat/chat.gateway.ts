@@ -29,17 +29,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly authService: AuthService) {}
   async handleConnection(@ConnectedSocket() client: Socket) {
     console.log('connected');
-    // if (!client.handshake.headers.authorization) {
-    //   console.log('no token provided');
-    //   client.disconnect();
-    //   return;
-    // }
 
-    // const user: UserDocument | false =
-    //   await this.authService.verifyUserByTokenFromSocket(
-    //     client.handshake.headers.authorization.split(' ')[1],
-    //   );
-    // // console.log(user);
     // if (user) client.join(`user_${user._id}`);
     // else client.disconnect();
   }
@@ -48,13 +38,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log('disconnected');
   }
 
-  @UseGuards(WsJwtGuard)
-  @UseFilters(new WebsocketsExceptionFilter())
-  @SubscribeMessage('test-listen')
-  async testListen(@MessageBody() data: any, @AuthUser() me: UserDocument) {
-    console.log(data, me.role);
-    // throw new WsException('test exception event'); // Nest will handle the thrown exception and emit the exception message
-    this.server.to(`user_${me._id}`).emit('test-emit', { msg: 'successful' });
-    return data;
+  @SubscribeMessage('signin')
+  async signin(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
+    client.join(`${data.id}`);
+    console.log(`join ${data.id}`);
+  }
+
+  @SubscribeMessage('message')
+  async message(@MessageBody() data: any) {
+    this.server.to(`${data.targetId}`).emit('message', data);
+  }
+
+  @SubscribeMessage('image')
+  async image(@MessageBody() data: any) {
+    this.server.to(`${data.targetId}`).emit('image', data);
   }
 }

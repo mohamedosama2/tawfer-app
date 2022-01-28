@@ -78,6 +78,16 @@ export class UsersController {
     );
   }
 
+  @Public()
+  @Post('photo')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'photo', maxCount: 1 }]))
+  async photo(
+    @UploadedFiles()
+    files,
+  ) {
+    return { photo: files.photo[0].secure_url };
+  }
+
   @HttpCode(HttpStatus.OK)
   @Post('/change-password')
   async changePassword(
@@ -92,9 +102,7 @@ export class UsersController {
 
   @Public()
   @Get(':id')
-  async fetchUserById(
-    @Param() { id }: ParamsWithId,
-  ): Promise<UserDocument> {
+  async fetchUserById(@Param() { id }: ParamsWithId): Promise<UserDocument> {
     return await this.usersService.findOne({
       _id: id,
     } as FilterQuery<UserDocument>);
