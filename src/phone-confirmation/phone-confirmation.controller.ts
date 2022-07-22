@@ -25,12 +25,9 @@ import { UserRepository } from 'src/users/users.repository';
 @ApiTags('PHONE-CONFIRMATION')
 @Controller('phone-confirmation')
 export class PhoneConfirmationController {
-  constructor(
-    private readonly phoneConfirmationService: PhoneConfirmationService,
-    private readonly userRepository: UserRepository,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
-  @Public()
+  /*  @Public()
   @HttpCode(HttpStatus.OK)
   @Post()
   async sendSMS(
@@ -40,8 +37,8 @@ export class PhoneConfirmationController {
       createPhoneConfirmationDto,
     );
   }
-
-  @Public()
+ */
+  /*  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('verify')
   async verificationCode(
@@ -52,5 +49,5 @@ export class PhoneConfirmationController {
       { phone: verifyData.phone } as FilterQuery<UserDocument>,
       { enabled: true } as UpdateUserDto,
     );
-  }
+  } */
 }

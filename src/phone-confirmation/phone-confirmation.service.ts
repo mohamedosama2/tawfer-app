@@ -10,7 +10,7 @@ export class PhoneConfirmationService {
     @InjectTwilio()
     private twilioClient: TwilioClient,
   ) {}
-
+/* 
   async sendSMS(
     createPhoneConfirmationDto: CreatePhoneConfirmationDto,
   ): Promise<VerificationInstance> {
@@ -25,9 +25,9 @@ export class PhoneConfirmationService {
       console.log(error);
       throw error;
     }
-  }
+  } 
 
-  async verificationCode(verifyData: VerifyPhoneDto): Promise<void> {
+ async verificationCode(verifyData: VerifyPhoneDto): Promise<void> {
     try {
       let verificationResult = await this.twilioClient.verify
         .services(process.env.TWILIO_ACCOUNT_VERIFY_SID)
@@ -41,4 +41,7 @@ export class PhoneConfirmationService {
       throw error;
     }
   }
+} }
+
+*/
 }

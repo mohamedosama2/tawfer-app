@@ -6,19 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [
-    TwilioModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        accountSid: configService.get('TWILIO_ACCOUNT_SID'),
-        authToken: configService.get('TWILIO_AUTH_TOKEN'),
-      }),
-      inject: [ConfigService],
-    }),
-    UsersModule
-  ],
-  controllers: [PhoneConfirmationController],
-  providers: [PhoneConfirmationService],
-  exports: [PhoneConfirmationService],
+  imports: [UsersModule],
+ 
 })
 export class PhoneConfirmationModule {}

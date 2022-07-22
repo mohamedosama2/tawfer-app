@@ -66,7 +66,7 @@ export class AuthService {
     const token = jwt.sign(payload, process.env.JWT_SECRET, options);
     return { user, token };
   }
-
+/* 
   async loginGoogle(user: UserDocument): Promise<UserDocument> {
     return user;
   }
@@ -92,7 +92,7 @@ export class AuthService {
       } as CreateQuery<UserDocument>);
     }
     return user;
-  }
+  } */
 
   async verifyUserByTokenFromSocket(
     token: string,

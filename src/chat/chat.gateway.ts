@@ -16,6 +16,11 @@ import { User, UserDocument } from 'src/users/models/_user.model';
 import { WsJwtGuard } from './guards/ws-jwt.guard';
 import { WebsocketsExceptionFilter } from './filters/WebsocketsException.filter';
 
+interface Message {
+  to: string;
+  message: string;
+}
+
 @WebSocketGateway({
   cors: {
     origin: '*',
@@ -27,30 +32,48 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
 
   constructor(private readonly authService: AuthService) {}
+
   async handleConnection(@ConnectedSocket() client: Socket) {
     console.log('connected');
+    if (!client.handshake.headers.authorization) {
+      console.log('no token provided');
+      client.disconnect();
+      return;
+    }
 
-    // if (user) client.join(`user_${user._id}`);
-    // else client.disconnect();
+    const user: UserDocument | false =
+      await this.authService.verifyUserByTokenFromSocket(
+        client.handshake.headers.authorization.split(' ')[1],
+      );
+    console.log(user);
+    if (user) client.join(`user_${user._id}`);
+    else client.disconnect();
   }
 
   handleDisconnect(@ConnectedSocket() client: Socket) {
     console.log('disconnected');
   }
 
-  @SubscribeMessage('signin')
-  async signin(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
-    client.join(`${data.id}`);
-    console.log(`join ${data.id}`);
-  }
-
+  @UseGuards(WsJwtGuard)
+  @UseFilters(new WebsocketsExceptionFilter())
   @SubscribeMessage('message')
-  async message(@MessageBody() data: any) {
-    this.server.to(`${data.targetId}`).emit('message', data);
+  async listenMessage(
+    @MessageBody() data: Message,
+    @AuthUser() me: UserDocument,
+  ) {
+    // throw new WsException('test exception event'); // Nest will handle the thrown exception and emit the exception message
+    this.server.to(`user_${me._id}`).emit('sending', data);
+    this.server.to(`user_${data.to}`).emit('sending', data);
+    return data;
   }
 
-  @SubscribeMessage('image')
-  async image(@MessageBody() data: any) {
-    this.server.to(`${data.targetId}`).emit('image', data);
+  @UseGuards(WsJwtGuard)
+  @UseFilters(new WebsocketsExceptionFilter())
+  @SubscribeMessage('test-listen')
+  async testListen(@MessageBody() data: any, @AuthUser() me: UserDocument) {
+    console.log(data, me.role);
+    // throw new WsException('test exception event'); // Nest will handle the thrown exception and emit the exception message
+    this.server.to(`user_${me._id}`).emit('test-emit', { msg: 'successful' });
+    return data;
   }
 }

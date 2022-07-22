@@ -1,10 +1,5 @@
-import {
-  Prop,
-  Schema,
-  SchemaFactory,
-  DiscriminatorOptions,
-} from '@nestjs/mongoose';
-import { Document, Model, ObjectId, AcceptsDiscriminator } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Model, ObjectId } from 'mongoose';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { hash, compare } from 'bcryptjs';
 import { Constants } from '../../utils/constants';
@@ -35,7 +30,8 @@ export enum UserRole {
   },
 })
 export class User {
-  id?: string;
+  _id: string;
+
   @Prop({
     index: true,
     unique: true,
@@ -60,15 +56,14 @@ export class User {
       return username.trim();
     },
     required: true,
-    index: true,
   })
   username: string;
 
   @Prop()
   password: string;
 
-  @Prop({ default: false })
-  enabled: boolean;
+  @Prop({ default: true })
+  enabled: Boolean;
 
   @Prop()
   photo: string;

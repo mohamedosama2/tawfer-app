@@ -32,19 +32,18 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userRepository: UserRepository,
-    private readonly phoneConfirmationService: PhoneConfirmationService,
     @Inject(REQUEST) private readonly req: Record<string, unknown>,
   ) {}
 
-  @Public()
+   @Public()
   @Post('/signup')
   async register(@Body() RegisterDto: RegisterDto): Promise<StudentDocument> {
     let user = await this.authService.register(RegisterDto);
-    await this.phoneConfirmationService.sendSMS({
+   /*  await this.phoneConfirmationService.sendSMS({
       phone: RegisterDto.phone,
-    });
+    }); */
     return user;
-  }
+  } 
 
   @Public()
   @HttpCode(HttpStatus.OK)
@@ -56,24 +55,24 @@ export class AuthController {
     return await this.authService.login(LoginDto);
   }
 
-  @Public()
+ /*  @Public()
   @UseGuards(GoogleOauthGuard)
   @Post('/login-googel')
   async loginGoogle(
     @Body() _loginGoogleData: LoginGoogleDto,
   ): Promise<UserDocument> {
     return await this.authService.loginGoogle(this.req.me as UserDocument);
-  }
+  } */
 
-  @Public()
+/*   @Public()
   @Post('/login-facebook')
   async loginFacebook(
     @Body() { accessToken }: LoginFacebookDto,
   ): Promise<UserDocument> {
     return await this.authService.loginFacebook({ accessToken });
-  }
+  } */
 
-  @Public()
+ /*  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('/check-code-to-reset')
   async checkCodeToReset(
@@ -83,9 +82,9 @@ export class AuthController {
       phone,
       code,
     });
-  }
+  } */
 
-  @Public()
+ /*  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('reset-password')
   async resetPassword(
@@ -96,5 +95,5 @@ export class AuthController {
       { phone } as FilterQuery<UserDocument>,
       { password } as UpdateUserDto,
     );
-  }
+  } */
 }
