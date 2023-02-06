@@ -6,6 +6,8 @@ import {
   HttpCode,
   UseGuards,
   Inject,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -23,8 +25,9 @@ import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { StudentDocument } from 'src/users/models/student.model';
 import { FilterQuery } from 'mongoose';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { UserRepository } from 'src/users/users.repository';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('AUTH')
 @Controller('auth')
@@ -35,15 +38,22 @@ export class AuthController {
     @Inject(REQUEST) private readonly req: Record<string, unknown>,
   ) {}
 
-   @Public()
+  @Public()
   @Post('/signup')
-  async register(@Body() RegisterDto: RegisterDto): Promise<StudentDocument> {
-    let user = await this.authService.register(RegisterDto);
-   /*  await this.phoneConfirmationService.sendSMS({
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'photo', maxCount: 1 }]))
+  @ApiConsumes('multipart/form-data')
+  async register(
+    @UploadedFiles() files,
+    @Body() RegisterDto: RegisterDto,
+  ): Promise<StudentDocument> {
+    if (files && files.photo) RegisterDto['photo'] = files.photo[0].secure_url;
+
+    const user: StudentDocument = await this.authService.register(RegisterDto);
+    /*  await this.phoneConfirmationService.sendSMS({
       phone: RegisterDto.phone,
     }); */
     return user;
-  } 
+  }
 
   @Public()
   @HttpCode(HttpStatus.OK)
@@ -55,7 +65,7 @@ export class AuthController {
     return await this.authService.login(LoginDto);
   }
 
- /*  @Public()
+  /*  @Public()
   @UseGuards(GoogleOauthGuard)
   @Post('/login-googel')
   async loginGoogle(
@@ -64,7 +74,7 @@ export class AuthController {
     return await this.authService.loginGoogle(this.req.me as UserDocument);
   } */
 
-/*   @Public()
+  /*   @Public()
   @Post('/login-facebook')
   async loginFacebook(
     @Body() { accessToken }: LoginFacebookDto,
@@ -72,7 +82,7 @@ export class AuthController {
     return await this.authService.loginFacebook({ accessToken });
   } */
 
- /*  @Public()
+  /*  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('/check-code-to-reset')
   async checkCodeToReset(
@@ -84,7 +94,7 @@ export class AuthController {
     });
   } */
 
- /*  @Public()
+  /*  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('reset-password')
   async resetPassword(

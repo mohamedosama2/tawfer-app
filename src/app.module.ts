@@ -7,6 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { PhoneConfirmationModule } from './phone-confirmation/phone-confirmation.module';
 import { DatabaseModule } from './database.module';
 import { ChatModule } from './chat/chat.module';
+import { BagsModule } from './bags/bags.module';
+import { MessageQueueModule } from './message-queue/message-queue.module';
+import { FoodModule } from './food/food.module';
+import { CategoriesModule } from './categories/categories.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -15,6 +19,10 @@ import { ChatModule } from './chat/chat.module';
     AuthModule,
     PhoneConfirmationModule,
     ChatModule,
+    BagsModule,
+    MessageQueueModule,
+    FoodModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

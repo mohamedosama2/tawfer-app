@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Model, ObjectId } from 'mongoose';
+import { Document, Model } from 'mongoose';
 import { UnprocessableEntityException } from '@nestjs/common';
-import { hash, compare } from 'bcryptjs';
 import { Constants } from '../../utils/constants';
 import { Password } from '../../auth/utils/Password';
 
@@ -63,7 +62,7 @@ export class User {
   password: string;
 
   @Prop({ default: true })
-  enabled: Boolean;
+  enabled: boolean;
 
   @Prop()
   photo: string;
@@ -76,6 +75,8 @@ export class User {
 
   @Prop({ required: true, type: String, enum: Object.values(UserRole) })
   role: UserRole;
+
+  /*  */
 }
 
 const UserSchema = SchemaFactory.createForClass(User);
@@ -87,7 +88,12 @@ const UserSchema = SchemaFactory.createForClass(User);
 UserSchema.pre('save', async function () {
   const user = this;
 
-  let nullableFields = ['phone', 'email', 'googleId', 'facebookId'];
+  const nullableFields: Array<string> = [
+    'phone',
+    'email',
+    'googleId',
+    'facebookId',
+  ];
   for (let i = 0; i < nullableFields.length; i++) {
     if (user.isModified(nullableFields[i])) {
       const value = user[nullableFields[i]];
@@ -95,16 +101,16 @@ UserSchema.pre('save', async function () {
     }
   }
 
-  let uniqueFields = ['phone', 'apple_id', 'fb_id', 'email'];
+  const uniqueFields = ['phone', 'apple_id', 'fb_id', 'email'];
   for (let i = 0; i < uniqueFields.length; i++) {
     if (user.isModified(uniqueFields[i])) {
       // be true if was undefined then set value to it , be false if same value set to it
-      let value = user[uniqueFields[i]];
+      const value = user[uniqueFields[i]];
       if (value === undefined) continue;
-      let filter = {};
+      const filter = {};
       filter[uniqueFields[i]] = value;
-      let model = <Model<User>>this.constructor;
-      let count = await model.countDocuments(filter);
+      const model = <Model<User>>this.constructor;
+      const count = await model.countDocuments(filter);
       if (count) {
         throw new UnprocessableEntityException(
           `${uniqueFields[i]} : ${value} is not a uniqu value`,

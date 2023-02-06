@@ -1,24 +1,19 @@
 import {
   Injectable,
   UnauthorizedException,
-  HttpException,
-  HttpStatus,
   BadRequestException,
 } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import * as jwt from 'jsonwebtoken';
 import TokenPayload from './interfaces/tokenPayload.interface';
-import { LoginGoogleDto } from './dto/login-google.dto';
 import { User, UserDocument } from 'src/users/models/_user.model';
-import { LoginFacebookDto } from './dto/login-facebook.dto';
-import axios from 'axios';
+
 import { ConfigService } from '@nestjs/config';
 import { UserNotFoundException } from 'src/users/exceptions/userNotFound.exception';
 import { JwtService } from '@nestjs/jwt';
 import { StudentDocument } from 'src/users/models/student.model';
-import { CreateQuery, FilterQuery } from 'mongoose';
+import { FilterQuery } from 'mongoose';
 import { UserRepository } from 'src/users/users.repository';
 
 @Injectable()
@@ -31,9 +26,12 @@ export class AuthService {
 
   async register(registerationData: RegisterDto): Promise<StudentDocument> {
     let user = await this.userRepository.findOne({
-      phone: registerationData.phone,
+      $or: [
+        { phone: registerationData.phone },
+        { email: registerationData.email },
+      ],
     } as FilterQuery<UserDocument>);
-    if (user) throw new BadRequestException('phone should be unique');
+    if (user) throw new BadRequestException('phone and email should be unique');
     // user = await this.userRepository.create({
     //   ...registerationData,
     //   role: 'student',
@@ -50,7 +48,7 @@ export class AuthService {
     token: string;
   }> {
     const { phone } = loginDto;
-    let user = await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       phone,
     } as FilterQuery<UserDocument>);
     if (!user) throw new UserNotFoundException();
@@ -66,7 +64,7 @@ export class AuthService {
     const token = jwt.sign(payload, process.env.JWT_SECRET, options);
     return { user, token };
   }
-/* 
+  /* 
   async loginGoogle(user: UserDocument): Promise<UserDocument> {
     return user;
   }
