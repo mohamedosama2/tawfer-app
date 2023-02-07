@@ -1,0 +1,7 @@
+@import '../base' ;
+.Fav {
+  @apply flex items-center justify-between py-2 px-10 bg-white rounded-xl m-2 w-96;
+/*   @include respon(phone) {
+    @apply flex-col;
+  } */
+}

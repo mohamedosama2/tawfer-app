@@ -1,0 +1,67 @@
+@import '../../base' ;
+
+html {
+  font-size: 62.5%; //1rem = 10px / 16 => 62.5
+
+  @include respon(big-disktop) {
+      font-size: 75%; //1rem = 12px /16 =>75
+  }
+  @include respon(tap-land) {
+      font-size: 56.25%; //1rem = 9px /16 =>56.25
+  }
+  @include respon(tap-port) {
+      font-size: 50%; //1rem = 8px /16 =>50
+  }
+  @include respon(phone) {
+      font-size: 43.75%; //1rem = 7px / 16 => 43.75
+  }
+}
+
+.Home {
+  min-height: 90vh;
+  @include respon(phone) {
+    min-height: auto;
+   }
+  &__main {
+    @apply bg-secondary font-display flex justify-center items-center px-72;
+      @include respon(tap-land) {
+    @apply px-44 ;//1rem = 9px /16 =>56.25
+  }
+      @include respon(tap-port) {
+    @apply px-20 ;//1rem = 9px /16 =>56.25
+  }
+  @include respon(phone) {
+    flex-wrap: wrap;
+    align-content: center;
+  }
+ 
+    clip-path: polygon(0 0, 100% 0, 100% 70vh, 0 80vh);
+    height: 90vh;
+    @include respon(phone) {
+      min-height: auto;
+      padding: 5rem 2rem;
+      clip-path: none
+     }
+    h1 {
+      @apply text-4xl font-bold my-4 text-right;
+    }
+    p {
+      @apply text-4xl text-gray-400 my-4 text-right;
+      @include respon(tap-port) {
+        @apply my-10 ;//1rem = 9px /16 =>56.25
+      }
+    }
+    img {
+      width: 50rem;
+      margin: 0 2rem;
+      @include respon(tap-port) {
+        width: 50%;//1rem = 9px /16 =>56.25
+      }
+      @include respon(phone) {
+       width: 70%;
+      }
+     
+    
+    }
+  }
+}

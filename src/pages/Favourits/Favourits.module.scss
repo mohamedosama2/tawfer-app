@@ -1,0 +1,11 @@
+@import "../../base";
+.Favourits {
+  min-height: 95vh;
+  @apply bg-secondary font-display px-28;
+  /*   @include respon(phone) {
+    @apply px-10;
+  }  */
+  section {
+    @apply flex items-center content-center justify-center flex-wrap;
+  }
+}

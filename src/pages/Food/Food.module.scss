@@ -1,0 +1,10 @@
+.Food {
+  min-height: 90vh;
+  @apply bg-secondary font-display px-28 pt-5;
+  h1 {
+    @apply text-3xl font-bold text-primary underline text-center py-10;
+  }
+  &__cat {
+    @apply  flex justify-center items-center flex-wrap;
+  }
+}

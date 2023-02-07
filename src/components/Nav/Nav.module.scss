@@ -1,0 +1,26 @@
+@import '../../base';
+
+.Nav {
+  @apply bg-white flex items-center justify-between px-20  py-5 font-display flex-row-reverse shadow-lg text-2xl;
+  h1 {
+    @apply text-primary font-extrabold;
+  }
+  div {
+    @apply flex items-center;
+    @include respon(phone){
+        display: none
+    }
+  }
+  h3 {
+    @apply cursor-pointer;
+  }
+  img {
+    display: none;
+    @include respon(phone){
+        display: block;
+        width: 2rem;
+        height: 2rem;
+    }
+  }
+ 
+}
