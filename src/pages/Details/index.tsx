@@ -12,7 +12,7 @@ function Details({ isOpen, setIsOpen }: IProps) {
   return (
     <>
       <main className={styles.Details} onClick={() => setIsOpen(false)}>
-        <section className="m-20 ">
+        <section className=" ">
           <img src={oil} alt="oil" className={styles.product} />
           <div>
             <h2>زيت</h2>

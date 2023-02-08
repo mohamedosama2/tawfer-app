@@ -4,10 +4,14 @@ import { Constants } from "../utils/constants";
 import FormikInput from "./FormikInput";
 import { useState } from "react";
 import styles from "./WelcomeForm.module.scss";
-const btn = styles.btn
- 
-const style = styles.input
-  
+import { ClockLoader ,MoonLoader} from "react-spinners";
+import { useLogInMutation, useSignUpMutation } from "../store/services/auth";
+import BarLoader from "react-spinners/BarLoader";
+import RingLoader from "react-spinners/RingLoader";
+const btn = styles.btn;
+
+const style = styles.input;
+
 const SignupSchema = Yup.object().shape({
   username: Yup.string()
     .min(2, "Too Short!")
@@ -35,6 +39,9 @@ interface IProps {
 
 export function WelcomeForm({ setIsOpen }: IProps) {
   const [isSignUp, setIsSignUp] = useState<boolean>(true);
+
+  const [signUp, { isLoading: isLoadingSignUp }] = useSignUpMutation();
+  const [login, { isLoading: isLoadingLogin }] = useLogInMutation();
 
   let FormSignUp = (
     <Formik
@@ -97,16 +104,20 @@ export function WelcomeForm({ setIsOpen }: IProps) {
       )}
     </Formik>
   );
-  let FormLogin = (
+  let FormLogin = isLoadingLogin ? (
+   <div className=" mt-20 relative w-28 m-auto"> <RingLoader size={150}   color="#301E67" style={{ margin: "auto" }} /></div>
+  ) : (
     <Formik
       initialValues={{
         phone: "",
         password: "",
       }}
       validationSchema={LoginSchema}
-      onSubmit={(values) => {
+      onSubmit={async (values, { resetForm }: { resetForm: () => void }) => {
         // same shape as initial values
         console.log(values);
+        await login({ password: values.password, phone: values.phone });
+        resetForm();
       }}
     >
       {({ errors, touched }) => (
@@ -138,6 +149,7 @@ export function WelcomeForm({ setIsOpen }: IProps) {
       )}
     </Formik>
   );
+
   return (
     <>
       <div
