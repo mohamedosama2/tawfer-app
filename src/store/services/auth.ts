@@ -4,17 +4,17 @@ import { axiosBaseQuery } from "../types";
 
 // Define a service using a base URL and expected endpoints
 
-interface SignUp {
+export interface SignUp {
   username: string;
   password: string;
   phone: string;
 }
-interface LogIn {
+export interface LogIn {
   password: string;
   phone: string;
 }
 
-interface LoginResponse {
+export interface LoginResponse {
   user: User;
   token: string;
 }
@@ -27,7 +27,7 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     signUp: builder.mutation<User, SignUp>({
       query: (userData) => ({
-        url: `auth/signup`,
+        url: `/auth/signup`,
         method: "POST",
         data: userData,
       }),

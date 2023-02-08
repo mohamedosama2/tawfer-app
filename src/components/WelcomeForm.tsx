@@ -1,13 +1,16 @@
-import { Formik, Form, Field } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Constants } from "../utils/constants";
 import FormikInput from "./FormikInput";
 import { useState } from "react";
 import styles from "./WelcomeForm.module.scss";
-import { ClockLoader ,MoonLoader} from "react-spinners";
-import { useLogInMutation, useSignUpMutation } from "../store/services/auth";
-import BarLoader from "react-spinners/BarLoader";
+import {
+  LoginResponse,
+  useLogInMutation,
+  useSignUpMutation,
+} from "../store/services/auth";
 import RingLoader from "react-spinners/RingLoader";
+import { useToast } from "@chakra-ui/react";
 const btn = styles.btn;
 
 const style = styles.input;
@@ -39,11 +42,17 @@ interface IProps {
 
 export function WelcomeForm({ setIsOpen }: IProps) {
   const [isSignUp, setIsSignUp] = useState<boolean>(true);
+  const toast = useToast();
 
   const [signUp, { isLoading: isLoadingSignUp }] = useSignUpMutation();
   const [login, { isLoading: isLoadingLogin }] = useLogInMutation();
 
-  let FormSignUp = (
+  let FormSignUp = isLoadingSignUp ? (
+    <div className=" mt-20 relative w-28 m-auto">
+      {" "}
+      <RingLoader size={150} color="#301E67" style={{ margin: "auto" }} />
+    </div>
+  ) : (
     <Formik
       initialValues={{
         username: "",
@@ -53,9 +62,19 @@ export function WelcomeForm({ setIsOpen }: IProps) {
         password: "",
       }}
       validationSchema={SignupSchema}
-      onSubmit={(values) => {
+      onSubmit={async (values, { resetForm }: { resetForm: () => void }) => {
         // same shape as initial values
         console.log(values);
+
+        await signUp(values);
+        toast({
+          title: `تم انشاء مستخدم جديد`,
+          position: "top",
+          isClosable: true,
+          status: "success",
+        });
+        setIsSignUp(false);
+        resetForm();
       }}
     >
       {({ errors, touched }) => (
@@ -105,7 +124,10 @@ export function WelcomeForm({ setIsOpen }: IProps) {
     </Formik>
   );
   let FormLogin = isLoadingLogin ? (
-   <div className=" mt-20 relative w-28 m-auto"> <RingLoader size={150}   color="#301E67" style={{ margin: "auto" }} /></div>
+    <div className=" mt-20 relative w-28 m-auto">
+      {" "}
+      <RingLoader size={150} color="#301E67" style={{ margin: "auto" }} />
+    </div>
   ) : (
     <Formik
       initialValues={{
@@ -116,7 +138,25 @@ export function WelcomeForm({ setIsOpen }: IProps) {
       onSubmit={async (values, { resetForm }: { resetForm: () => void }) => {
         // same shape as initial values
         console.log(values);
-        await login({ password: values.password, phone: values.phone });
+        const user: { data: LoginResponse } | any = await login({
+          password: values.password,
+          phone: values.phone,
+        });
+        window.location.href = "/";
+
+        console.log(user);
+        for (const key in user?.data?.user) {
+          localStorage.setItem(key, user?.data?.user[key]);
+        }
+        localStorage.setItem("token", user?.data?.token);
+
+        toast({
+          title: "تم التسجيل بنجاح",
+          position: "top",
+          isClosable: true,
+          status: "success",
+        });
+
         resetForm();
       }}
     >

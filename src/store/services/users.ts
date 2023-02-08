@@ -7,11 +7,11 @@ import { axiosBaseQuery } from "../types";
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: axiosBaseQuery({
-    baseUrl: "",
+    baseUrl: "http://localhost:4000",
   }),
   endpoints: (builder) => ({
     getProfile: builder.query<User, void>({
-      query: () => ({ url: `users/profile` }),
+      query: () => ({ url: `/users/profile` }),
     }),
   }),
 });
