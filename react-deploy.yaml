@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-deployment
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: react
+  template:
+    metadata:
+      labels:
+        app: react
+    spec:
+      containers:
+        - name: react
+          image: mohamedlato/react-tawfer:latest
+          env:
+            - name: REACT_APP_apiKey
+              valueFrom:
+                configMapKeyRef:
+                  name: data-react-env
+                  key: REACT_APP_apiKey
+            - name: REACT_APP_authDomain
+              valueFrom:
+                configMapKeyRef:
+                  name: data-react-env
+                  key: REACT_APP_authDomain
+            - name: REACT_APP_projectId
+              valueFrom:
+                configMapKeyRef:
+                  name: data-react-env
+                  key: REACT_APP_projectId
+            - name: REACT_APP_storageBucket
+              valueFrom:
+                configMapKeyRef:
+                  name: data-react-env
+                  key: REACT_APP_storageBucket
+            - name: REACT_APP_messagingSenderId
+              valueFrom:
+                configMapKeyRef:
+                  name: data-react-env
+                  key: REACT_APP_messagingSenderId
+            - name: REACT_APP_appId
+              valueFrom:
+                configMapKeyRef:
+                  name: data-react-env
+                  key: REACT_APP_appId
+            - name: REACT_APP_measurementId
+              valueFrom:
+                configMapKeyRef:
+                  name: data-react-env
+                  key: REACT_APP_measurementId
+            - name: REACT_APP_vapidKey
+              valueFrom:
+                configMapKeyRef:
+                  name: data-react-env
+                  key: REACT_APP_vapidKey
+          ports:
+            - containerPort: 80
