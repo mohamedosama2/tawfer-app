@@ -9,9 +9,12 @@ import {
   UseInterceptors,
   UploadedFiles,
   Query,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 import { PaginateResult } from 'mongoose';
 import { AuthUser } from 'src/auth/decorators/me.decorator';
 import { UserDocument } from 'src/users/models/_user.model';
@@ -47,8 +50,9 @@ export class CategoriesController {
   }
 
   @Post('send-fans')
-  sendToFans(@Query() { id }: ParamsWithId) {
-    console.log(id);
+  sendToFans(@Query() { id }: ParamsWithId, @Res() res: Response) {
+    res.status(HttpStatus.OK).json({ ok: 'done' });
+
     return this.categoriesService.sendToFans(id);
   }
 
