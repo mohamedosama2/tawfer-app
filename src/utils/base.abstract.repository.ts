@@ -93,4 +93,11 @@ export abstract class BaseAbstractRepository<T> {
   ): Promise<void> {
     await this.model.updateOne(filterQuery, updateQuery);
   }
+  public async updateAllVoid(
+    filterQuery: FilterQuery<TDocument<T>>,
+    updateQuery: UpdateQuery<TDocument<T>>,
+    options: QueryOptions = {},
+  ): Promise<void> {
+    await this.model.updateMany(filterQuery, updateQuery);
+  }
 }

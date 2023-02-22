@@ -33,6 +33,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new AllExceptionsFilter());
+
   // swagger config
   const options = new DocumentBuilder()
     .setTitle('NEST STRUCTURE')
@@ -46,14 +47,9 @@ async function bootstrap() {
     },
   };
   const document = SwaggerModule.createDocument(app, options, {
-    extraModels: [
-      PaginatedDto,
-      User,
-      FilterQueryOptionsUser,
-      ParamsWithId,
-    ],
+    extraModels: [PaginatedDto, User, FilterQueryOptionsUser, ParamsWithId],
   });
   SwaggerModule.setup('api', app, document, customOptions);
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(4000);
 }
 bootstrap();

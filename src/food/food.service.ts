@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { CategoriesService } from 'src/categories/categories.service';
 import { User, UserDocument } from 'src/users/models/_user.model';
 import { CreateFoodDto, FilterQueryOptionsFood } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
@@ -6,17 +7,36 @@ import { FoodRepository } from './food.repository';
 
 @Injectable()
 export class FoodService {
-  constructor(private readonly FoodRepository: FoodRepository) {}
+  constructor(
+    private readonly FoodRepository: FoodRepository,
+    private readonly CategoriesService: CategoriesService,
+  ) {}
   create(createFoodDto: CreateFoodDto) {
     return this.FoodRepository.create(createFoodDto);
   }
 
-  findAll(FilterQueryOptionsFood: FilterQueryOptionsFood) {
-    return this.FoodRepository.findAllWithPaginationOption(
+  async findAll(
+    FilterQueryOptionsFood: FilterQueryOptionsFood,
+    user: UserDocument,
+  ) {
+    const isFav = await this.CategoriesService.checkFavo(
+      FilterQueryOptionsFood.category,
+      user._id,
+    );
+
+    const food = await this.FoodRepository.findAllWithPaginationOption(
       FilterQueryOptionsFood,
       ['name', 'category'],
-      { sort: { price: 1 }, populate: [{ path: 'category', select: 'name' }] },
+      {
+        sort: { price: 1 },
+        populate: [
+          { path: 'category', select: 'name' },
+          { path: 'customer', select: 'photo username ' },
+        ],
+      },
     );
+    food['isFav'] = isFav ? true : false;
+    return food;
   }
 
   findAllCategories() {

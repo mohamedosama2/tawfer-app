@@ -1,4 +1,8 @@
-import { Module, UnprocessableEntityException } from '@nestjs/common';
+import {
+  CacheModule,
+  Module,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -11,6 +15,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { UploadCloudinary } from 'src/utils/services/upload-cloudinary';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserRepository } from './users.repository';
+import { cacheOperationsModule } from 'src/cache/cache.module';
 
 @Module({
   imports: [

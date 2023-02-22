@@ -14,7 +14,7 @@ export class CategoryRepository extends BaseAbstractRepository<Category> {
   }
 
   async getMyFavourits(UserDocument: UserDocument) {
-    return this.categoryModel.find({ fans: UserDocument.id });
+    return this.categoryModel.find({ fans: UserDocument.id }, { fans: 0 });
   }
   async makeFavourite(categoryId: string, UserDocument: UserDocument) {
     return this.categoryModel.updateOne(

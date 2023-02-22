@@ -39,8 +39,9 @@ export class FoodController {
   @Get()
   async findAll(
     @Query() FilterQueryOptionsFood: FilterQueryOptionsFood,
+    @AuthUser() user: UserDocument,
   ): Promise<PaginateResult<FoodDocument> | Array<FoodDocument>> {
-    return await this.foodService.findAll(FilterQueryOptionsFood);
+    return await this.foodService.findAll(FilterQueryOptionsFood, user);
   }
 
   @Get('categories')

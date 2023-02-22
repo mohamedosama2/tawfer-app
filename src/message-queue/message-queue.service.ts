@@ -17,6 +17,7 @@ export class MessageQueueService
 
   async onModuleInit(): Promise<void> {
     const connectionUrl: string = process.env.AMQP_URL;
+    console.log(process.env.AMQP_URL)
     await new Promise<void>(async (resolve, _reject) => {
       // Create a connection manager
       this._connection = await amqp.connect(connectionUrl);

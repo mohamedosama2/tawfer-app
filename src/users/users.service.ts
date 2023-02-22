@@ -14,6 +14,7 @@ import {
   PaginateModel,
   PaginateOptions,
   PaginateResult,
+  UpdateQuery,
 } from 'mongoose';
 import { ChangePasswordDto } from 'src/users/dto/change-password.dto';
 import { FilterQueryOptionsUser } from './dto/filterQueryOptions.dto';
@@ -21,6 +22,12 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument, UserRole, UserSchema } from './models/_user.model';
 import * as _ from 'lodash';
 import { UserRepository } from './users.repository';
+import { cacheOperationsService } from 'src/cache/cache-operations.service';
+
+function randomInRange(from: number, to: number) {
+  var r = Math.random();
+  return Math.floor(r * (to - from) + from);
+}
 
 @Injectable()
 export class UsersService {
@@ -68,7 +75,7 @@ export class UsersService {
 
     return await this.userRepository.updateOne(
       { _id: me._id } as FilterQuery<UserDocument>,
-      { password: newPassword } as UpdateUserDto,
+      { password: newPassword } as UpdateQuery<UserDocument>,
     );
   }
 }

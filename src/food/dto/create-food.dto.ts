@@ -47,6 +47,9 @@ export class FilterQueryFood {
   })
   name?: string;
 
+  @IsMongoId()
+  category: string;
+
   /* @IsOptional()
   @IsEnum(CATEGORY)
   category?: CATEGORY; */

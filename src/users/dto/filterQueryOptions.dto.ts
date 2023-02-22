@@ -1,4 +1,4 @@
-import { IsOptional } from 'class-validator';
+import { IsMongoId, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { escapeRegExp } from 'lodash';
 import { PaginationParams } from 'src/utils/pagination/paginationParams.dto';
@@ -16,3 +16,13 @@ export class FilterQueryOptionsUser extends IntersectionType(
   FilterQueryUser,
   PaginationParams,
 ) {}
+
+/* export class FilterQueryNotification {
+  @IsMongoId()
+  receiver: string;
+}
+
+export class FilterQueryOptionsNotification extends IntersectionType(
+  FilterQueryUser,
+  PaginationParams,
+) {} */

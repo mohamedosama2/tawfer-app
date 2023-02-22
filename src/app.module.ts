@@ -1,4 +1,4 @@
-import { Module, UseInterceptors } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
@@ -11,6 +11,7 @@ import { BagsModule } from './bags/bags.module';
 import { MessageQueueModule } from './message-queue/message-queue.module';
 import { FoodModule } from './food/food.module';
 import { CategoriesModule } from './categories/categories.module';
+import { HttpModule } from '@nestjs/axios';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -23,6 +24,10 @@ import { CategoriesModule } from './categories/categories.module';
     MessageQueueModule,
     FoodModule,
     CategoriesModule,
+    HttpModule,
+    /*   NotificationModule, */
+    // MessageQueueModule,
+    // cacheOperationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

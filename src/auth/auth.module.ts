@@ -11,12 +11,12 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     UsersModule,
-    
+
     ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
+        secret: 'hawhawhahwhahaw',
       }),
       inject: [ConfigService],
     }),
@@ -24,7 +24,6 @@ import { JwtModule } from '@nestjs/jwt';
   controllers: [AuthController],
   providers: [
     AuthService,
-    
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
   ],

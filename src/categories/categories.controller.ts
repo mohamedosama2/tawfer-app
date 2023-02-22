@@ -46,6 +46,12 @@ export class CategoriesController {
     return this.categoriesService.findAll(FilterQueryOptionsCategory);
   }
 
+  @Post('send-fans')
+  sendToFans(@Query() { id }: ParamsWithId) {
+    console.log(id);
+    return this.categoriesService.sendToFans(id);
+  }
+
   @Get('favourits')
   async findFavourits(@AuthUser() UserDocument: UserDocument) {
     return await this.categoriesService.getMyFavourits(UserDocument);
@@ -68,8 +74,11 @@ export class CategoriesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.categoriesService.findOne(+id);
+  async findOne(
+    @Param() { id }: ParamsWithId,
+    @AuthUser() UserDocument: UserDocument,
+  ) {
+    return await this.categoriesService.findOne(id, UserDocument._id);
   }
 
   @Patch(':id')

@@ -17,6 +17,10 @@ export class RegisterDto {
   password: string;
 
   @IsString()
+  @IsNotEmpty()
+  country: string;
+
+  @IsString()
   @Matches(Constants.PHONE_REGX, { message: 'phone is invalid' })
   phone: string;
 
