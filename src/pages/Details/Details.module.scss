@@ -10,7 +10,7 @@
   min-height: 100vh;
 
   section {
-    @apply flex content-center items-center text-right m-20;
+    @apply flex content-center justify-between items-center text-right m-20;
     @include respon(tap-port){
       @apply flex-col ;
   }

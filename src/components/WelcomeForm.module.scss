@@ -11,3 +11,16 @@
     @apply w-1/2;
   }
 }
+.btnFood {
+  @apply bg-gray-800  text-white px-20 w-3/4 py-3 rounded-2xl my-10 text-2xl;
+  @include respon(phone) {
+    @apply w-1/2;
+  }
+}
+
+.inputFood {
+  @apply font-bold  bg-transparent text-right text-primary px-3 py-3 w-2/3 focus:outline-0 placeholder:text-black placeholder:text-2xl  rounded-md border-transparent border-b-primary border-2 my-4;
+  @include respon(phone) {
+    @apply w-1/2;
+  }
+}

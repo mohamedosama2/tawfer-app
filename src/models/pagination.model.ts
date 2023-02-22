@@ -24,7 +24,9 @@ export interface PaginationParams extends TokenInput {
   limit?: number;
 
   allowPagination?: boolean;
+
+
 }
 export interface TokenInput {
-  token: string;
+  token: string | null;
 }

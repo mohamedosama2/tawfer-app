@@ -23,7 +23,7 @@ html {
     min-height: auto;
    }
   &__main {
-    @apply bg-secondary font-display flex justify-center items-center px-72;
+    @apply bg-primary font-display flex justify-center items-center px-72;
       @include respon(tap-land) {
     @apply px-44 ;//1rem = 9px /16 =>56.25
   }
@@ -35,7 +35,7 @@ html {
     align-content: center;
   }
  
-    clip-path: polygon(0 0, 100% 0, 100% 70vh, 0 80vh);
+    clip-path: polygon(0 0, 100% 0, 100% 80vh, 0 90vh);
     height: 90vh;
     @include respon(phone) {
       min-height: auto;
@@ -43,10 +43,10 @@ html {
       clip-path: none
      }
     h1 {
-      @apply text-4xl font-bold my-4 text-right;
+      @apply text-4xl font-bold my-4 text-right text-secondary;
     }
     p {
-      @apply text-4xl text-gray-400 my-4 text-right;
+      @apply text-4xl text-gray-400 my-10 text-right leading-relaxed;
       @include respon(tap-port) {
         @apply my-10 ;//1rem = 9px /16 =>56.25
       }

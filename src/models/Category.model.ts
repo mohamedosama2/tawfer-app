@@ -8,6 +8,9 @@ export interface Category {
   createdAt: string;
   updatedAt: string;
 }
+export interface CategoryAndIsFav extends Category {
+  isFav: boolean;
+}
 
 export interface CategoryPagination extends PaginationOutput {
   docs: Array<Category>;

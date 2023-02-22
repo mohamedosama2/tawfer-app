@@ -3,6 +3,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import type {
   AddToFavourits,
   Category,
+  CategoryAndIsFav,
   CategoryPagination,
 } from "../../models/Category.model";
 import { PaginationParams, TokenInput } from "../../models/pagination.model";
@@ -12,44 +13,58 @@ import { axiosBaseQuery } from "../types";
 export const categoryApi = createApi({
   reducerPath: "categoryApi",
   baseQuery: axiosBaseQuery({
-    baseUrl: "",
+    baseUrl: `/api`,
   }),
+  tagTypes: ["Favourits"],
   endpoints: (builder) => ({
     getCategories: builder.query<CategoryPagination, PaginationParams>({
       query: ({ token }) => ({
-        url: `categories`,
+        url: `/categories`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }),
     }),
+
+    getCategory: builder.query<CategoryAndIsFav, { id: string; token: string }>(
+      {
+        query: ({ token, id }) => ({
+          url: `/categories/${id}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        providesTags: ["Favourits"],
+      }
+    ),
     getMyFavourits: builder.query<Array<Category>, TokenInput>({
       query: ({ token }) => ({
-        url: `categories/favourits`,
+        url: `/categories/favourits`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }),
+      providesTags: ["Favourits"],
     }),
     addToFavourits: builder.mutation<void, AddToFavourits>({
       query: ({ id, token }) => ({
-        url: `categories/makeFavourite`,
+        url: `/categories/makeFavourite?id=${id}`,
         method: "POST",
-        data: { id },
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }),
+      invalidatesTags: ["Favourits"],
     }),
     removeFromFavourits: builder.mutation<void, AddToFavourits>({
       query: ({ id, token }) => ({
-        url: `categories/removeFavourite`,
+        url: `/categories/removeFavourite?id=${id}`,
         method: "POST",
-        data: { id },
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }),
+      invalidatesTags: ["Favourits"],
     }),
   }),
 });
@@ -61,4 +76,5 @@ export const {
   useAddToFavouritsMutation,
   useGetMyFavouritsQuery,
   useRemoveFromFavouritsMutation,
+  useGetCategoryQuery,
 } = categoryApi;

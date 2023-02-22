@@ -3,17 +3,20 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import type { User } from "../../models/User.model";
 import type { TokenInput } from "../../models/pagination.model";
 import { axiosBaseQuery } from "../types";
+import type { NotificationSubscribe } from "../../models/Notification.model";
 
 // Define a service using a base URL and expected endpoints
-export const userApi = createApi({
-  reducerPath: "userApi",
+export const notificationApi = createApi({
+  reducerPath: "notificationApi",
   baseQuery: axiosBaseQuery({
-    baseUrl: "/api",
+    baseUrl: "/notification",
   }),
   endpoints: (builder) => ({
-    getProfile: builder.query<User, TokenInput>({
-      query: ({ token }) => ({
-        url: `/users/profile`,
+    subscribe: builder.mutation<void, NotificationSubscribe>({
+      query: ({ token, NotificationToken, type = "web" }) => ({
+        url: `/Notifications/subscribe`,
+        method: "POST",
+        data: { token: NotificationToken },
         headers: { Authorization: `Bearer ${token}` },
       }),
     }),
@@ -22,4 +25,4 @@ export const userApi = createApi({
 
 // Export hooks for usage in function components, which are
 // auto-generated based on the defined endpoints
-export const { useGetProfileQuery } = userApi;
+export const { useSubscribeMutation } = notificationApi;

@@ -2,11 +2,13 @@ import Nav from "../../components/Nav";
 import styles from "./Home.module.scss";
 import Price from "../../imgs/price.png";
 import { motion } from "framer-motion";
+import About from "../../components/About";
 interface IProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 function Home({ isOpen, setIsOpen }: IProps) {
+  console.log(process.env);
   return (
     <>
       <div className={styles.Home} onClick={() => setIsOpen(false)}>
@@ -31,13 +33,15 @@ function Home({ isOpen, setIsOpen }: IProps) {
               يلا نوفرلهاا
             </motion.h1>
             <motion.p animate={{ y: [100, 0] }} transition={{ duration: 1 }}>
-              "محاربة الغلاء".. تعرف على أماكن بيع السلع الغذائية بأسعار مخفضة
-              في بورسعيد · تموين بورسعيد وجميع الاماكن في انحاء مصر
+              يساعد التطبيق في توفير المال لأنه يتتبع ارتفاع الأسعار ويساعد
+              الأشخاص على اختيار منتجات أقل سعرًا ويرسل إشعارًا إلى الأشخاص إذا
+              تم تسجيل عنصر بسعر أرخص.
             </motion.p>
             <motion.button
+              onClick={() => (window.location.href = "/favourits")}
               animate={{ y: [100, 0], opacity: [0, 1] }}
               transition={{ duration: 1, delay: 1 }}
-              className="bg-primary text-white font-bold text-xl my-5 px-2 py-4 rounded-2xl  w-80 m-auto  block text-2xl "
+              className="bg-white text-primary font-bold  my-5 px-2 py-4 rounded-2xl  w-80 m-auto  block text-2xl "
             >
               يلا بينا
             </motion.button>

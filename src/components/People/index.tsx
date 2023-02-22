@@ -1,17 +1,20 @@
-function People() {
+import { Food } from "../../models/Food.model";
+
+function People(food: Food) {
   return (
     <div className="bg-white rounded-sm p-2 w-96 my-2 mx-2 ">
       <img
-        alt="person"
+        alt={food._id}
         className=""
-        src="https://divineyouwellness.com/blog/wp-content/uploads/2021/03/shutterstock_563564683-scaled.jpg"
+        src={
+          food.customer.photo
+            ? food.customer.photo
+            : "https://divineyouwellness.com/blog/wp-content/uploads/2021/03/shutterstock_563564683-scaled.jpg"
+        }
       />
-      <h2>محمد اسامة</h2>
-      <h3>100ج</h3>
-      <h5>
-        عنوان جست كافالى فرع القاهرة - مصر الجديدة: 14 عمارات الشركة السعودية -
-        ش النزهة مصر الجديدة / محافظة: القاهرة / دولة: مصر
-      </h5>
+      <h2 className="text-xl">{food.customer.username}</h2>
+      <h3 className="text-lg">{food.price}</h3>
+      <h5>{food.address}</h5>
     </div>
   );
 }

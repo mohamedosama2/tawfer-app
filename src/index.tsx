@@ -7,6 +7,15 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import { BrowserRouter } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
+if ('serviceWorker'  in navigator) {
+  navigator.serviceWorker.register('./firebase-messaging-sw.js')
+   .then(function(registration) {
+    console.log('Registration was successful: ', registration)
+   })
+   .catch(function(e) {
+    console.error('Registration has filed', e)
+   })
+ }
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

@@ -1,0 +1,22 @@
+@import "../../base";
+
+.About {
+    @apply bg-secondary py-64 ;
+    margin-top: -90px;
+  section {
+    @apply flex justify-between items-center  mx-60;
+  }
+  p {
+    @apply text-3xl font-bold text-right;
+  }
+  img {
+    width: 50rem;
+    margin: 0 2rem;
+    @include respon(tap-port) {
+      width: 50%; //1rem = 9px /16 =>56.25
+    }
+    @include respon(phone) {
+      width: 70%;
+    }
+  }
+}

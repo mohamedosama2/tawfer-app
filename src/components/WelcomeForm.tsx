@@ -4,6 +4,7 @@ import { Constants } from "../utils/constants";
 import FormikInput from "./FormikInput";
 import { useState } from "react";
 import styles from "./WelcomeForm.module.scss";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   LoginResponse,
   useLogInMutation,
@@ -45,7 +46,7 @@ export function WelcomeForm({ setIsOpen }: IProps) {
   const toast = useToast();
 
   const [signUp, { isLoading: isLoadingSignUp }] = useSignUpMutation();
-  const [login, { isLoading: isLoadingLogin }] = useLogInMutation();
+  const [login, { isLoading: isLoadingLogin, isError }] = useLogInMutation();
 
   let FormSignUp = isLoadingSignUp ? (
     <div className=" mt-20 relative w-28 m-auto">
@@ -79,7 +80,12 @@ export function WelcomeForm({ setIsOpen }: IProps) {
     >
       {({ errors, touched }) => (
         <Form>
-          <div className="py-10 flex flex-col content-around items-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="py-10 flex flex-col content-around items-center"
+          >
             <FormikInput
               name="username"
               type="text"
@@ -118,7 +124,7 @@ export function WelcomeForm({ setIsOpen }: IProps) {
             </span>
 
             <button className={btn}>تسجيل الدخول</button>
-          </div>
+          </motion.div>
         </Form>
       )}
     </Formik>
@@ -142,27 +148,41 @@ export function WelcomeForm({ setIsOpen }: IProps) {
           password: values.password,
           phone: values.phone,
         });
-        window.location.href = "/";
 
         console.log(user);
-        for (const key in user?.data?.user) {
-          localStorage.setItem(key, user?.data?.user[key]);
+        if (user && !isError && user?.data?.token) {
+          window.location.href = "/";
+          for (const key in user?.data?.user) {
+            localStorage.setItem(key, user?.data?.user[key]);
+          }
+          localStorage.setItem("token", user?.data?.token);
+
+          toast({
+            title: "تم التسجيل بنجاح",
+            position: "top",
+            isClosable: true,
+            status: "success",
+          });
+
+          resetForm();
+        } else {
+          toast({
+            title: "لم يتم التسجيل",
+            position: "top",
+            isClosable: true,
+            status: "error",
+          });
         }
-        localStorage.setItem("token", user?.data?.token);
-
-        toast({
-          title: "تم التسجيل بنجاح",
-          position: "top",
-          isClosable: true,
-          status: "success",
-        });
-
-        resetForm();
       }}
     >
       {({ errors, touched }) => (
         <Form>
-          <div className="py-10 flex flex-col content-around items-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="py-10 flex flex-col content-around items-center"
+          >
             <FormikInput
               name="phone"
               type="string"
@@ -184,7 +204,7 @@ export function WelcomeForm({ setIsOpen }: IProps) {
             </span>
 
             <button className={btn}>تسجيل الدخول</button>
-          </div>
+          </motion.div>
         </Form>
       )}
     </Formik>
@@ -203,7 +223,7 @@ export function WelcomeForm({ setIsOpen }: IProps) {
           <h2 className="text-white bg-gray-800 w-1/4 m-auto  py-3 text-4xl font-extrabold font-body italic -skew-x-12 ">
             يلا توفيير
           </h2>
-          {isSignUp ? FormSignUp : FormLogin}
+          <AnimatePresence>{isSignUp ? FormSignUp : FormLogin}</AnimatePresence>
         </div>
       </div>
     </>

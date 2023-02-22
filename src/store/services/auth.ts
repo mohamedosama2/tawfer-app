@@ -22,7 +22,7 @@ export interface LoginResponse {
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: axiosBaseQuery({
-    baseUrl: "http://localhost:4000", ////BEGAIN HERE
+    baseUrl: `/api`, ////BEGAIN HERE
   }),
   endpoints: (builder) => ({
     signUp: builder.mutation<User, SignUp>({

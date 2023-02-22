@@ -11,18 +11,57 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useGetProfileQuery } from "./store/services/users";
 import { clearupFunc } from "./utils/helperFuncs";
+import { initializeApp } from "firebase/app";
+import { getMessaging, getToken } from "firebase/messaging";
+import axios from "axios";
+import { useSubscribeMutation } from "./store/services/notifications";
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_apiKey,
+  authDomain: process.env.REACT_APP_authDomain,
+  projectId: process.env.REACT_APP_projectId,
+  storageBucket: process.env.REACT_APP_storageBucket,
+  appId: process.env.REACT_APP_appId,
+  messagingSenderId: process.env.REACT_APP_messagingSenderId,
+  measurementId: process.env.REACT_APP_measurementId,
+};
 
+initializeApp(firebaseConfig);
 function App() {
-  const [isOpen, setIsOpen] = useState(false);
-  /*  const accessToken=localStorage.getItem("token")
-  useEffect(() => {
-    if (!accessToken) window.location.href = "/";
-  }, [accessToken]);
- */
-  const { isError, data, isSuccess } = useGetProfileQuery();
+  const [subscribeToken] = useSubscribeMutation();
+  console.log(process.env);
+  async function getFCMToken() {
+    const messaging = getMessaging();
+    try {
+      // Don't forget to paste your VAPID key here
+      // (you can find it in the Console too)
+      const token = await getToken(messaging, {
+        vapidKey: process.env.REACT_APP_vapidKey,
+      });
+      await subscribeToken({
+        NotificationToken: token,
+        token: localStorage.getItem("token"),
+        type: "web",
+      });
+
+      return token;
+    } catch (e) {
+      console.log("getFCMToken error r", e);
+      return undefined;
+    }
+  }
 
   useEffect(() => {
-    if (!isError) {
+    getFCMToken();
+  }, [localStorage.getItem("token")]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { isError, data, isSuccess } = useGetProfileQuery({
+    token: localStorage.getItem("token") ? localStorage.getItem("token") : "",
+  });
+
+  useEffect(() => {
+    if (isError) {
+      console.log(localStorage.getItem("token"));
       clearupFunc();
     }
   }, []);
@@ -34,7 +73,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home {...{ isOpen, setIsOpen }} />} />
           <Route
-            path="/details"
+            path="/details/:id"
             element={<Details {...{ isOpen, setIsOpen }} />}
           />
           <Route

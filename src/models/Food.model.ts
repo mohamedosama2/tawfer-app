@@ -1,9 +1,14 @@
-import { PaginationOutput } from "./pagination.model";
+import { PaginationOutput, PaginationParams } from "./pagination.model";
 
 export interface Food {
   _id: string;
   photo: string;
-  customer: string;
+  customer: {
+    role: string;
+    username: string;
+    id: string;
+    photo?: string | undefined;
+  };
   category: {
     _id: string;
     name: string;
@@ -18,15 +23,20 @@ export interface Food {
 
 export interface FoodPagination extends PaginationOutput {
   docs: Array<Food>;
+  isFav: boolean;
+}
+
+export interface FoodInput extends PaginationParams {
+  category: string | undefined;
 }
 
 export interface AddFood {
   token: string;
-  photo: string;
+  photo?: string;
   name: string;
   address: string;
   category: string;
   customer: string;
-  describtion: string;
+  describtion?: string;
   price: number;
 }
