@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+        - name: notification
+          image: mohamedlato/tawfer-notification:latest
+          env:
+            - name: NOTIFICATION_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: data-env
+                  key: NOTIFICATION_SERVICE
+            - name: MONGODB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: data-env
+                  key: MONGODB_URI
+            - name: JWT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: data-env
+                  key: JWT_SECRET
+            - name: cloud_name
+              valueFrom:
+                configMapKeyRef:
+                  name: data-env
+                  key: cloud_name
+            - name: api_key
+              valueFrom:
+                configMapKeyRef:
+                  name: data-env
+                  key: api_key
+            - name: api_secret
+              valueFrom:
+                configMapKeyRef:
+                  name: data-env
+                  key: api_secret
+            - name: AMQP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: data-env
+                  key: AMQP_URL
+            - name: projectId
+              valueFrom:
+                configMapKeyRef:
+                  name: data-env
+                  key: projectId
+            - name: privateKey
+              valueFrom:
+                configMapKeyRef:
+                  name: data-env
+                  key: privateKey
+            - name: clientEmail
+              valueFrom:
+                configMapKeyRef:
+                  name: data-env
+                  key: clientEmail
+          ports:
+            - containerPort: 80
