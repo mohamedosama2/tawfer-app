@@ -94,7 +94,7 @@ export class CategoriesService {
     /*    console.log('category: ', category);
     console.log('food: ', food); */
     const resp = await this.httpService.post(
-      `http://localhost:80/Notifications/send-many-docs`,
+      `http://${process.env.NOTIFICATION_SERVICE_SERVICE_HOST}/Notifications/send-many-docs`,
       { category, food },
     );
     resp.forEach((value) => {
